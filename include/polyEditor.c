@@ -1,8 +1,11 @@
-#include <GL/glut.h>
+#ifndef POLYEDIT_C
+#define POLYEDIT_C
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "types.h"
 #include "render.h"
+#include "ncurses.c"
 
 typedef struct{
 	Vector2d vertecies[3];
@@ -28,7 +31,6 @@ void display(){
 void onMouse(int button, int state, int x, int y){
 	double w = glutGet( GLUT_WINDOW_WIDTH );
 	double h = glutGet( GLUT_WINDOW_HEIGHT );
-	glPoly *temp = Polygons;
 	if(button == 2 && state == 0){
 		currPoly--;
 		if(currPoly < 0)
@@ -65,14 +67,14 @@ char *formatToFile(){
 	for(int i = 0; i < currPoly; i++){
 		for(int j = 0; j < 3; j++){
 			int k;
-			k=(((((Polygons[i].vertecies[j].a + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2) - ((((lowestX + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2)))/(10*atof(args[3])));
+			k=(((((Polygons[i].vertecies[j].a + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2) - ((((lowestX + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2)))/(10*atof(args[2])));
 			strcat(out, itoa0(k));
 			strcat(out, " ");
-			k=((((Polygons[i].vertecies[j].b + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2) - ((((lowestY + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2)))/(10*atof(args[3]));
+			k=((((Polygons[i].vertecies[j].b + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2) - ((((lowestY + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2)))/(10*atof(args[2]));
 			strcat(out, itoa0(k));
 			strcat(out, " ");
 		}
-		strcat(out, args[2]);
+		strcat(out, args[1]);
 		strcat(out, "\n");
 	}
 	return out;
@@ -83,7 +85,7 @@ void keypress(unsigned  char key, int x, int y){
 		case('s'):{
 			char *content = formatToFile();
 			FILE *fp;
-			fp = fopen(args[1], "w");
+			fp = fopen(args[0], "w");
 			if(fp == NULL){
 				printf("file can't be opened\n");
 				exit(1);
@@ -91,21 +93,20 @@ void keypress(unsigned  char key, int x, int y){
 			fprintf(fp, "%s", content);
 			fclose(fp);
 			free(content);
-			exit(0);
 			break;}
 		case('q'):
-			exit(0);
+			glutLeaveMainLoop();
 			break;
 		case('r'):
 			currPoly = currVert = 0;
 			break;
 		case('h'):
-			printf("Object Generator Help Page\n\tThis tool is to assist in the creation of a 2D object\n\nControls:\n\tLMB-Places a new vertex, takes 3 vertecies to create a polygon\n\tRMB-Delete last polygon\n\tS-Save to the file supplied in the console\n\tQ-Quit the software without saving\n\tR-Reset all polygons\n\tH-Display this page\n");
+			printf("Object Generator Help Page\n\tThis tool is to assist in the creation of a 2D object\n\nControls:\n\tLMB-Places a new vertex, takes 3 vertecies to create a polygon\n\tRMB-Delete last polygon\n\tS-Save to the file supplied in the console\n\tQ-Quit the software\n\tR-Reset all polygons\n\tH-Display this page\n");
 			break;
 	}
 }
 
-int main(int argc, char** argv){
+int start(int argc, char** argv){
 	args = argv;
         glutInit(&argc, argv);
         glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -119,3 +120,4 @@ int main(int argc, char** argv){
 	glutKeyboardFunc(keypress);
         glutMainLoop();
 }
+#endif
