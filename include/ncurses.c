@@ -63,19 +63,29 @@ int main(){
 			buffer[j] = '\0';
 			switch(buffer[0]){
 				case ('q'):
-//					endwin();
-//					exit(0);
+					endwin();
+					exit(0);
 					break;
 				case ('n'):{
 					char **tdchar = splitBySpace(buffer);
-					move(0,0);
+					move(LINES-1,0);
 //					printw("%s %s %s", tdchar[0], tdchar[1], tdchar[2]);
 					endwin();
-					start(0,tdchar);
+					start(4,tdchar);
 					initscr();
 					free(tdchar);
 					break;
 				}
+				case ('p'):
+					//render a certain object
+					break;
+				case ('o'):
+					//set project dir
+					break;
+				default:
+					move(LINES-1,0);
+					printw("Unknown command: %c",buffer[0]);
+					break;
 			}
 			j=0;
 		}
