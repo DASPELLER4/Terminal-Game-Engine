@@ -2,10 +2,36 @@
 #define POLYEDIT_C
 #include <GL/freeglut.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
-#include "types.h"
-#include "render.h"
-#include "ncurses.c"
+//#include "types.h"
+//#include "render.h"
+
+typedef struct{
+        double a;
+        double b;
+} Vector2d;
+
+char* itoa0(int num){
+        if(num==0){
+                return "0";
+        }
+        char *areturnval = (char *) malloc(17);
+        char *returnval = (char *) malloc(17);
+        int i = 0;
+        while (num != 0){
+                int rem = num % 10;
+                areturnval[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0';
+                num = num/10;
+        }
+        areturnval[i] = 0;
+        returnval[i] = 0;
+        for(int j = 0; --i > -1;j++){
+                returnval[j] = areturnval[i];
+        }
+        free(areturnval);
+        return returnval;
+}
 
 typedef struct{
 	Vector2d vertecies[3];
@@ -95,7 +121,9 @@ void keypress(unsigned  char key, int x, int y){
 			free(content);
 			break;}
 		case('q'):
-			glutLeaveMainLoop();
+			glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+			if(glutGetWindow())
+				glutDestroyWindow(glutGetWindow());
 			break;
 		case('r'):
 			currPoly = currVert = 0;
@@ -119,5 +147,6 @@ int start(int argc, char** argv){
         glutIdleFunc(idle);
 	glutKeyboardFunc(keypress);
         glutMainLoop();
+	return 0;
 }
 #endif
