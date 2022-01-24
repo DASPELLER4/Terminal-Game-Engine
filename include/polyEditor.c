@@ -4,34 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-//#include "types.h"
-//#include "render.h"
-
-typedef struct{
-        double a;
-        double b;
-} Vector2d;
-
-char* itoa0(int num){
-        if(num==0){
-                return "0";
-        }
-        char *areturnval = (char *) malloc(17);
-        char *returnval = (char *) malloc(17);
-        int i = 0;
-        while (num != 0){
-                int rem = num % 10;
-                areturnval[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0';
-                num = num/10;
-        }
-        areturnval[i] = 0;
-        returnval[i] = 0;
-        for(int j = 0; --i > -1;j++){
-                returnval[j] = areturnval[i];
-        }
-        free(areturnval);
-        return returnval;
-}
+#include "types.h"
+#include "render.h"
 
 typedef struct{
 	Vector2d vertecies[3];
@@ -93,14 +67,14 @@ char *formatToFile(){
 	for(int i = 0; i < currPoly; i++){
 		for(int j = 0; j < 3; j++){
 			int k;
-			k=(((((Polygons[i].vertecies[j].a + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2) - ((((lowestX + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2)))/(10*atof(args[2])));
+			k=(((((Polygons[i].vertecies[j].a + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2) - ((((lowestX + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2)))/(10*atof(args[3])));
 			strcat(out, itoa0(k));
 			strcat(out, " ");
-			k=((((Polygons[i].vertecies[j].b + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2) - ((((lowestY + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2)))/(10*atof(args[2]));
+			k=((((Polygons[i].vertecies[j].b + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2) - ((((lowestY + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2)))/(10*atof(args[3]));
 			strcat(out, itoa0(k));
 			strcat(out, " ");
 		}
-		strcat(out, args[1]);
+		strcat(out, args[2]);
 		strcat(out, "\n");
 	}
 	return out;
@@ -111,7 +85,7 @@ void keypress(unsigned  char key, int x, int y){
 		case('s'):{
 			char *content = formatToFile();
 			FILE *fp;
-			fp = fopen(args[0], "w");
+			fp = fopen(args[1], "w");
 			if(fp == NULL){
 				printf("file can't be opened\n");
 				exit(1);
@@ -136,6 +110,10 @@ void keypress(unsigned  char key, int x, int y){
 
 int start(int argc, char** argv){
 	args = argv;
+	for(int i = 0; i < 25; i++)
+		Polygons[i] = (glPoly){{{0,0},{0,0},{0,0}}};
+	currVert = 0;
+	currPoly = 0;
         glutInit(&argc, argv);
         glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
         glutInitWindowPosition(80, 80);
