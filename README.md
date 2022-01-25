@@ -43,7 +43,8 @@ int scriptloop(Object *self, char c){
   if(tsleep(30,5)) // here the 5 refers to approximate seconds, and the 30 is arbitrary but only can be used once
     self->relPosX+=1
 }
-``` <br name="Compiling">
+```
+  <br name="Compiling">
 # Compiling
 just type ```:c``` <br name="Running">
 # Running
