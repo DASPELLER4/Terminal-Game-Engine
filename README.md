@@ -44,8 +44,9 @@ int scriptloop(Object *self, char c){
     self->relPosX+=1
 }
 ```
-  <br name="Compiling">
+<br name="Compiling">
 # Compiling
+
 just type ```:c``` <br name="Running">
 # Running
 <b>cd into the project dir</b> and run ./bin <br name="Running">
