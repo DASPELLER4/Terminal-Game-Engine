@@ -5,10 +5,11 @@ I started a  project to make a terminal 2D renderer, can be seen in my C-Project
 
 # Controls
 
-:q - quit
+:q - quit<br>
 :n +
   - p - new project
   - o - new object, takes three parameters, name, colour (a single ascii character) and size (inverse, 2 is the best option)
-  - s - mew script, needs to have the same name as an object
+  - s - new script, needs to have the same name as an object
+
 :p - preview an objecy
 :o - open project
