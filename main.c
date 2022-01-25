@@ -1,13 +1,8 @@
 #include "include/types.h"
-#include "include/object.h"
-#include "include/scene.h"
 #include "include/render.h"
+#include "include/ncurses.c"
 
 int main(int argc, char** argv){
-        Screen screen = initScreen();
-        readAndAdd(argv[1], &screen);
-        putchar('\n');
-        render(screen);
-        freeScreen(screen);
+	uiStart();
         return 0;
 }
