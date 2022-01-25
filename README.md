@@ -6,19 +6,17 @@ I started a  project to make a terminal 2D renderer, can be seen in my C-Project
 ONLY ON LINUX RIGHT NOW
 
 # Use
-1. [Installation](Installation)
-2. [Setup](Setup)
-3. [Writing Code](WritingCode)
-4. [Compiling](Compiling)
-5. [Running](Running)
+1. [Installation](#Installation)
+2. [Setup](#Setup)
+3. [Writing Code](#WritingCode)
+4. [Compiling](#Compiling)
+5. [Running](#Running)
 
-[Controls](Controls)
-
+[Controls](#Controls)<br name="Installation">
 # Installation
 ```git clone https://github.com/DASPELLER4/Terminal-Game-Engine/```
 
-cd into the folder and run make, the GameEngine binary should appear
-
+cd into the folder and run make, the GameEngine binary should appear<br name="Setup">
 # Setup
 ```./GameEngine```
 
@@ -26,8 +24,7 @@ type ```:np <project name>``` to create a project and ```:o <project name>```  t
 
 to create your first obejct just type ```:no <object name> <object character> <inverse object size>``` and draw the polygons in the gui, and save and exit with s and q in the gui
 
-to link a script to it type ```:ns <object name>``` IT IS REQUIRED TO USE AN EXISTING OBJECT FOR THIS
-
+to link a script to it type ```:ns <object name>``` IT IS REQUIRED TO USE AN EXISTING OBJECT FOR THIS <br name="WritingCode">
 # WritingCode
 Open the script file elsewhere, for example vim
 
@@ -46,14 +43,11 @@ int scriptloop(Object *self, char c){
   if(tsleep(30,5)) // here the 5 refers to approximate seconds, and the 30 is arbitrary but only can be used once
     self->relPosX+=1
 }
-```
-
+``` <br name="Compiling">
 # Compiling
-just type ```:c```
-
+just type ```:c``` <br name="Running">
 # Running
-<b>cd into the project dir</b> and run ./bin
-  
+<b>cd into the project dir</b> and run ./bin <br name="Running">
 # Controls
 :q - quit<br>
 :n +
