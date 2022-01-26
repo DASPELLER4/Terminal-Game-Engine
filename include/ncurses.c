@@ -272,6 +272,23 @@ int uiStart(){
 						move(LINES/2,0);
 						printw("Help Page - h\nfull controls available at the readme");
 						break;
+					case ('e'):{
+						char **tdchar = splitBySpace(buffer);
+						if(splitCount==2){
+						move(LINES-1,0);	
+						char shit[50] = {0};
+						strcpy(shit, "vim ");
+						strcat(shit, project);
+						strcat(shit, "/scripts/");
+						strcat(shit, tdchar[1]);
+						endwin();
+						system(shit);
+						initscr();
+						}
+						for(int i = 0; i<splitCount; i++)
+						        free(tdchar[i]);
+						break;
+					}
 					case ('n'):{
 						switch(buffer[1]){
 							case('o'):{
