@@ -1,7 +1,7 @@
 #ifndef TFUNCS_H
 #define TFUNCS_H
 double sleeps[100];
-int tsleep(int index, int num){
+int tsleep(int index, double num){
         sleeps[index]+=0.00075;
         if(sleeps[index] < (double)num)
                 return 0;
