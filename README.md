@@ -48,8 +48,10 @@ You can also accept user input with the <code>c</code> variable containing the c
 
 ```
 int scriptloop(Object *self, char c){
-  if(c==' ')
+  if(c==' '){
     self->relPosY+=10;
+    sleeps[12]=0;
+  }
   if(tsleep(12,0.2)){
     if(self->relPosY>0)
       self->relPosY-=10;
