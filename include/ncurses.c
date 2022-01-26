@@ -145,7 +145,7 @@ int genCFile(){
 			x++;
                 }
         }
-	strcat(str, "#include <ncurses.h>\n#include \"scripts/allIncludes.h\"\n#include \"libs/object.h\"\n#include \"libs/render.h\"\n#include \"libs/scene.h\"\nint main(){\nfor(int x = 0; x < 100; x++)\n\tsleeps[x] = 0;\nScene scene = {");
+	strcat(str, "#include <ncurses.h>\n#include \"scripts/allIncludes.h\"\n#include \"libs/object.h\"\n#include \"libs/render.h\"\n#include \"libs/scene.h\"\nint main(){\nsignal(SIGINT, sigintHandler);for(int x = 0; x < 100; x++)\n\tsleeps[x] = 0;\nScene scene = {");
 	strcat(str, itoa0(x));
 	strcat(str, ",{");
 	rewinddir(dir);
