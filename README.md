@@ -25,7 +25,7 @@ type ```:np <project name>``` to create a project and ```:o <project name>```  t
 to create your first obejct just type ```:no <object name> <object character> <inverse object size>``` and draw the polygons in the gui, and save and exit with s and q in the gui
 
 to link a script to it type ```:ns <object name>``` IT IS REQUIRED TO USE AN EXISTING OBJECT FOR THIS <br name="WritingCode">
-# WritingCode
+# Writing Code
 Open the script file elsewhere, for example vim
 
 In your script file, there are 2 functions, <scriptname>start and <scriptname>loop, in the first function, you can write any code you want. The self object has many attributes, such as relPosX and relPosY, so to change this, you can use this example!
@@ -44,13 +44,27 @@ int scriptloop(Object *self, char c){
     self->relPosX+=1
 }
 ```
-<br name="Compiling">
-# Compiling
+You can also accept user input with the <code>c</code> variable containing the current key pressed
 
-just type ```:c``` <br name="Running">
-# Running
-<b>cd into the project dir</b> and run ./bin <br name="Running">
-# Controls
+```
+int scriptloop(Object *self, char c){
+  if(c==' ')
+    self->relPosY+=10;
+  if(tsleep(12,0.2)){
+    if(self->relPosY>0)
+      self->relPosY-=10;
+    if(self->relPosY<0)
+      self->relPosY = 0;
+  }
+}
+```
+
+<br name="Compiling">
+<h1>Compiling</h1>
+just type <code>:c</code> <br name="Running">
+<h1>Running</h1>
+<b>cd into the project dir</b> and run ./bin <br name="Controls">
+<h1>Controls</h1>
 :q - quit<br>
 :n +
   - p - new project
