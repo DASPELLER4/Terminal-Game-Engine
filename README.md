@@ -36,7 +36,7 @@ int scriptstart(Object *self){
   self->relPosY = 20;
 }
 ```
-In the loop function, you can use the tsleep function so that you can wait time befor executing again (warning tsleep is bad)
+In the loop function, you can use the tsleep function so that you can wait time befor executing again (warning tsleep is bad) for full explanation go [here](#Tsleep)
   
 ```
 int scriptloop(Object *self, char c){
@@ -60,7 +60,6 @@ int scriptloop(Object *self, char c){
   }
 }
 ```
-
 <br name="Compiling">
 <h1>Compiling</h1>
 just type <code>:c</code> <br name="Running">
@@ -75,3 +74,15 @@ just type <code>:c</code> <br name="Running">
 
 :p - preview an object<br>
 :o - open project
+
+<h1 name="Tsleep">Full Tsleep Explanation</h1>
+<pre><code>
+int tsleep(int index, double num){
+        sleeps[index]+=0.00075; // here sleeps is a counter for each sleep instance, this is why
+                                // using a different first parameter to the function is vital
+        if(sleeps[index] < num) // check that the sleep has not been completed
+                return 0;
+        else
+                return (sleeps[index]=0)+1; // otherwise, reset the sleep counter and return 1
+}
+</code></pre>
