@@ -25,7 +25,7 @@ Object* get_object(Scene *scene, char name[]){
 
 Poly *readPolygons(char *fileName){ // read from a file polygon data
 	char contents[MAXSIZE], color;
-	Poly *polygons = (Poly*) malloc(40*sizeof(Poly));
+	Poly *polygons = (Poly*) malloc(40*(sizeof(Poly)*3+1));
 	int currentVector[] = {0,0};
 	int tempCoord[3][2] = {{0,0},{0,0},{0,0}};
 	FILE *fptr;
