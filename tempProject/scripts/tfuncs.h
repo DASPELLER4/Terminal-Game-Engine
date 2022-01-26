@@ -2,6 +2,8 @@
 #define TFUNCS_H
 double sleeps[100];
 
+#include <signal.h>
+
 void sigintHandler(int sig_num){
         signal(SIGINT, sigintHandler);
 }
