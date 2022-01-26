@@ -64,7 +64,7 @@ int scriptloop(Object *self, char c){
 <h1>Compiling</h1>
 just type <code>:c</code> <br name="Running">
 <h1>Running</h1>
-<b>cd into the project dir</b> and run ./bin <br name="Controls">
+<code>:r</code>easy as is<br name="Controls">
 <h1>Controls</h1>
 :q - quit<br>
 :n +
