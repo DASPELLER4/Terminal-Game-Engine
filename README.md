@@ -73,8 +73,10 @@ just type <code>:c</code> <br name="Running">
   - s - new script, needs to have the same name as an object
 
 :p - preview an object<br>
-:o - open project
-
+:o - open project<br>
+:e - open script in vim
+:r - run game
+  
 <h1 name="Tsleep">Full Tsleep Explanation</h1>
 <pre><code>
 int tsleep(int index, double num){
