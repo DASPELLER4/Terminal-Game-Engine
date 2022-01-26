@@ -168,7 +168,7 @@ int genCFile(){
                 }
         }
 	rewinddir(dir);
-	strcat(str,"while (1){\nchar c = getch();\n");
+	strcat(str,"initscr();noecho();nodelay(stdscr, TRUE);scrollok(stdscr, TRUE);char c = 0;while (1){\nif(kbhit)c=getch();move(0,0);\n");
         while ((files = readdir(dir)) != NULL){
                 if(files->d_name[0] != '.' && strcmp(files->d_name, "allIncludes.h") && strcmp(files->d_name, "tfuncs.h")){
                         strcat(str, files->d_name);
@@ -177,7 +177,7 @@ int genCFile(){
                         strcat(str, "\"),c);\n");
                 }
         }
-	strcat(str,"Screen screen = sceneToScreen(scene);render(screen);freeScreen(screen);}}");
+	strcat(str,"Screen screen = sceneToScreen(scene);render(screen);freeScreen(screen);if(c=='q')break;}endwin();exit(0);}");
         FILE *fp = fopen(CFile, "w");
         if (fp == NULL)
                 return 0;
@@ -232,10 +232,11 @@ int uiStart(){
 			move(LINES-1,i);
 			while((c = getch()) != 27){
 				if (c == KEY_BACKSPACE || c == KEY_DC || c == 127){
+					if(i>=0){
 					i--;
 					move(LINES-1,i);
 					printw("%c",' ');
-					buffer[--j] = '\0';
+					buffer[--j] = '\0';}
 				}else if (c == '\n'){
 					break;
 				} else {
@@ -246,7 +247,7 @@ int uiStart(){
 				}
 			}
 			buffer[j] = '\0';
-			if(project[0] == 0 && (buffer[0]!='o' && buffer[0]!='q' && (buffer[0]!='n' && buffer[1]!='p') && buffer[0]!='h')){
+			if(project[0] == 0 & (buffer[0]!='o' && buffer[0]!='q' && (buffer[0]!='n' && buffer[1]!='p') && buffer[0]!='h')){
 				move(LINES-1,0);
 				printw("NO PROJECT OPENED");
 			}else{
@@ -277,8 +278,8 @@ int uiStart(){
 								char **tdchar = splitBySpace(buffer);
 								move(LINES-1,0);
 								endwin();
-								if(!(splitCount<4)){
-								char shit[30];
+								if(splitCount==4){
+								char shit[30] = {0};
 								strcpy(shit, project);
 								strcat(shit, "/objects/");
 								strcat(shit, tdchar[1]);
@@ -291,18 +292,21 @@ int uiStart(){
 								break;
 							}case('p'):{
 								char **tdchar = splitBySpace(buffer);
+								if(splitCount==2){
 								mkdir(tdchar[1],0777);
 								char command[50] = {0};
 								strcat(command, "cp -r tempProject/* ");
 								strcat(command, tdchar[1]);
 								system(command);
+								}
 								for(int i = 0; i<splitCount; i++)
 								        free(tdchar[i]);
 								break;
 							}case('s'):{
 								char **tdchar = splitBySpace(buffer);
+								if(splitCount==2){
 								move(LINES-1,0);
-								char shit[30];
+								char shit[30] = {0};
 								strcpy(shit, project);
 								strcat(shit, "/scripts/");
 								strcat(shit, tdchar[1]);
@@ -314,7 +318,7 @@ int uiStart(){
 								strcat(content, tdchar[1]);
 								strcat(content, "loop(Object *self, char c){\n}");
 								fprintf(newScript, "%s", content);
-								fclose(newScript);
+								fclose(newScript);}
 								for(int i = 0; i<splitCount; i++)
 									free(tdchar[i]);
 								genAllIncludes();
@@ -326,15 +330,14 @@ int uiStart(){
 						break;
 					} case('p'):{
 						char **tdchar = splitBySpace(buffer);
+						if(splitCount==2){
 						Screen screen = initScreen();
-						char shit[30];
+						char shit[30] = {0};
 						strcpy(shit, project);
 						strcat(shit, "/objects/");
 						strcat(shit, tdchar[1]);
 						readAndAdd(shit, &screen);
 						putchar('\n');
-						for(int i = 0; i<splitCount; i++)
-							free(tdchar[i]);
 						render(screen);
 						freeScreen(screen);
 						char cool;
@@ -342,15 +345,18 @@ int uiStart(){
 						endwin();
 						initscr();
 						noecho();
-						cbreak();
+						cbreak();}
+						for(int i = 0; i<splitCount; i++)
+							free(tdchar[i]);
 						break;
 					} case ('o'):{
 						char **tdchar = splitBySpace(buffer);
+						if(splitCount==2){
 						strcpy(project, tdchar[1]);
+						strcpy(projectFile, project);
+						strcat(projectFile, "/project.info");}
 						for(int i = 0; i<splitCount; i++)
 							free(tdchar[i]);
-						strcpy(projectFile, project);
-						strcat(projectFile, "/project.info");
 						break;
 					}default:
 						move(LINES-1,0);
