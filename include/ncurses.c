@@ -289,6 +289,17 @@ int uiStart(){
 						        free(tdchar[i]);
 						break;
 					}
+					case ('r'):{
+        				move(LINES-1,0);
+				        char shit[50] = {0};
+        				strcpy(shit, "cd ");
+			        	strcat(shit, project);
+	        			strcat(shit, "; ./bin");
+        				endwin();
+				        system(shit);
+				        initscr();
+				        break;
+					}
 					case ('n'):{
 						switch(buffer[1]){
 							case('o'):{
