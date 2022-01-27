@@ -225,6 +225,8 @@ int uiStart(){
 		refresh();
 		c = getch();
 		if(c == ':'){
+			for(int z = 0; z < 40; z++)
+				bufffer[z]=0;
 			move(LINES-1,i);
 			clrtoeol();
 			printw(":");
