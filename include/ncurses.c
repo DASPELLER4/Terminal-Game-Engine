@@ -225,8 +225,6 @@ int uiStart(){
 		refresh();
 		c = getch();
 		if(c == ':'){
-			for(int z = 0; z < 40; z++)
-				bufffer[z]=0;
 			move(LINES-1,i);
 			clrtoeol();
 			printw(":");
@@ -234,10 +232,11 @@ int uiStart(){
 			move(LINES-1,i);
 			while((c = getch()) != 27){
 				if (c == KEY_BACKSPACE || c == KEY_DC || c == 127){
-					if(i>=0){
+					if(i>1){
 					i--;
+					delch();
 					move(LINES-1,i);
-					printw("%c",' ');
+					delch();
 					buffer[--j] = '\0';}
 				}else if (c == '\n'){
 					break;
