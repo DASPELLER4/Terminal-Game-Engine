@@ -21,6 +21,7 @@ typedef struct{
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <ncurses.h>
 #include "types.h"
 
 #ifdef __unix__
@@ -148,13 +149,17 @@ char **createRender(Screen screen){ // Generate the 2d Character Array from the 
 }
 
 void render(Screen screen){
+	move(0,0);
 	char **text = createRender(screen);
-	for(int i = 0; i < screen.h-1; i++) // just iterate through all the 1d arrays and printf them
-		printf("%s\n",text[i]); // just realized that these strings have no null terminator, oops! tbh it works good enough and i cant be bothered to take 1 second and add a \0
+	for(int i = 0; i < screen.h-1; i++){ // just iterate through all the 1d arrays and printf them
+		printw("%s",text[i]); // just realized that these strings have no null terminator, oops! tbh it works good enough and i cant be bothered to take 1 second and add a \0
+		move(i,0);
+	}
 	for(int i = 0; i < screen.h; i++){
 	        free(text[i]);
 	}
 	free(text);
+	move(0,0);
 }
 
 void readAndAdd(char *fileName, Screen *screen){ // read from a file polygon data
