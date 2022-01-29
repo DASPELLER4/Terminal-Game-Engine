@@ -75,7 +75,8 @@ just type <code>:c</code> <br name="Running">
 
 :p - preview an object<br>
 :o - open project<br>
-:e - open script in vim
+:e - open script in vim<br>
+:c - compile project<br>
 :r - run game
   
 <h1 name="Tsleep">Full Tsleep Explanation</h1>
