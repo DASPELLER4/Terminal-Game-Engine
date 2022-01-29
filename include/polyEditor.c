@@ -67,7 +67,7 @@ char *formatToFile(){
 	for(int i = 0; i < currPoly; i++){
 		for(int j = 0; j < 3; j++){
 			int k;
-			k=(((((Polygons[i].vertecies[j].a + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2) - ((((lowestX + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2)))/(10*atof(args[3])));
+			k=(((((Polygons[i].vertecies[j].a + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2) - ((((lowestX + 1) * glutGet(GLUT_WINDOW_WIDTH)) / 2)))/(10*atof(args[3])))*2;
 			strcat(out, itoa0(k));
 			strcat(out, " ");
 			k=((((Polygons[i].vertecies[j].b + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2) - ((((lowestY + 1) * glutGet(GLUT_WINDOW_HEIGHT)) / 2)))/(10*atof(args[3]));
