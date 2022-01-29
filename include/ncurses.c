@@ -367,12 +367,12 @@ int uiStart(){
 						strcat(shit, "/objects/");
 						strcat(shit, tdchar[1]);
 						readAndAdd(shit, &screen);
+						endwin();
 						putchar('\n');
 						render(screen);
 						freeScreen(screen);
 						char cool;
 						while((cool = getch()) != '\n');
-						endwin();
 						initscr();
 						noecho();
 						cbreak();}
