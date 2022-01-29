@@ -260,6 +260,7 @@ int uiStart(){
 						break;
 					case ('c'):{
 						genAllIncludes();
+						genCFile();
 						char command[100] = "gcc ";
 						strcat(command, project);
 						strcat(command, "/project.c -o ");
