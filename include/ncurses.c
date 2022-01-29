@@ -31,7 +31,7 @@ void sigintHandler(int sig_num){
 
 char **splitBySpace(char* in){
 	char **ret = malloc(sizeof(char*)*strlen(in));
-	char buffer[14];
+	char buffer[100];
 	int j = 0;
 	int x = 0;
 	splitCount=0;
@@ -189,7 +189,7 @@ int genCFile(){
 
 int uiStart(){
 	char c;
-	char buffer[40];
+	char buffer[400];
 	int i = 0;
 	int j = 0;
 	initscr();
