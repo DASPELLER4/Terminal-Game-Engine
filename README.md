@@ -62,6 +62,7 @@ int scriptloop(Object *self, char c){
 ```
 <br name="Compiling">
 <h1>Compiling</h1>
+If you have manually written to project.c and allIncludes.h this will override your changes
 just type <code>:c</code> <br name="Running">
 <h1>Running</h1>
 <code>:r</code>easy as is<br name="Controls">
