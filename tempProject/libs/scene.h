@@ -12,8 +12,11 @@ typedef struct{
 
 Screen sceneToScreen(Scene scene){
 	Screen ret = initScreen();
-	ret.PolyCount = scene.ObjectCount*5;
-	ret.Polygons = (Poly *) malloc(sizeof(Poly) * ret.PolyCount * 100);
+	ret.PolyCount = 0;
+	for(int i = 0; i < scene.ObjectCount; i++)
+		for(int x = 0; x < scene.objects[i].PolyCount; x++)
+			ret.PolyCount++;
+	ret.Polygons = (Poly *) malloc(sizeof(Poly) * ret.PolyCount);
 	for(int x = 0; x < ret.PolyCount;)
 		for(int i = 0; i < scene.ObjectCount; i++)
 			for(int j = 0; j < scene.objects[i].PolyCount; j++)
