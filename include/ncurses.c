@@ -17,11 +17,12 @@
 #include "polyEditor.c"
 #include "render.h"
 
+#define PROJ_NAME_LENGTH 40
 #define MAX_LINE_LENGTH 80
 
 int splitCount=0;
-char project[40] = {0};
-char projectFile[60] = {0};
+char project[PROJ_NAME_LENGTH] = {0};
+char projectFile[PROJ_NAME_LENGTH+20] = {0};
 
 void sigintHandler(int sig_num){
 	signal(SIGINT, sigintHandler);
@@ -42,14 +43,14 @@ char **splitBySpace(char* in){
 			buffer[j++] = in[i];
 			buffer[j] = 0;
 			splitCount++;
-			strcpy(ret[x++], buffer);
+			strncpy(ret[x++], buffer, 100);
 			j = 0;
 		} else if(in[i] != ' '){
 			buffer[j++] = in[i];
 		} else {
 			buffer[j] = 0;
 			splitCount++;
-			strcpy(ret[x++], buffer);
+			strncpy(ret[x++], buffer, 100);
 			j = 0;
 		}
 	}
@@ -61,28 +62,47 @@ int genProjectInfo(){
 	struct dirent *files;
 	struct dirent *filees;
 	DIR *dir = opendir(project);
-	DIR *deer;
-	char deeer[30];
+	DIR *dirToReadForFile;
+	char dirToReadForFilesName[PROJ_NAME_LENGTH+21];
 	if (dir == NULL){
 		return 0;
 	}
-	char str[1024] = {0};
+	int lenOfStrVar = 0;
+	while ((files = readdir(dir)) != NULL){
+		if(files->d_name[0] != '.'){
+			lenOfStrVar += strlen(files->d_name) + 2;
+			strncpy(dirToReadForFilesName, project, PROJ_NAME_LENGTH);
+			strcat(dirToReadForFilesName, "/");
+			strcat(dirToReadForFilesName, files->d_name);
+			if((dirToReadForFile = opendir(dirToReadForFilesName))){
+				while ((filees = readdir(dirToReadForFile)) != NULL){
+					if(filees->d_name[0] != '.'){
+						lenOfStrVar += 4 + strlen(filees->d_name);
+					}
+				}
+				closedir(dirToReadForFile);
+			}
+		}
+	}
+	rewinddir(dir);
+	rewinddir(dirToReadForFile)
+	char str[lenOfStrVar];
 	while ((files = readdir(dir)) != NULL){
 		if(files->d_name[0] != '.'){
 			strcat(str, files->d_name);
 			strcat(str, "\n");
-			strcpy(deeer, project);
-			strcat(deeer, "/");
-			strcat(deeer, files->d_name);
-			if((deer = opendir(deeer))){
-				while ((filees = readdir(deer)) != NULL){
+			strncpy(dirToReadForFilesName, project, PROJ_NAME_LENGTH);
+			strcat(dirToReadForFilesName, "/");
+			strcat(dirToReadForFilesName, files->d_name);
+			if((dirToReadForFile = opendir(dirToReadForFilesName))){
+				while ((filees = readdir(dirToReadForFile)) != NULL){
 					if(filees->d_name[0] != '.'){
 						strcat(str, "\t");
 						strcat(str, filees->d_name);
 						strcat(str, "\n");
 					}
 				}
-				closedir(deer);
+				closedir(dirToReadForFile);
 			}
 		}
 	}
@@ -98,18 +118,25 @@ int genProjectInfo(){
 
 int genAllIncludes(){
         struct dirent *files;
-	char topDir[30] = {0};
-	char allIncludes[40] = {0};
-	strcat(topDir, project);
+	char topDir[PROJ_NAME_LENGTH+8];
+	char allIncludes[PROJ_NAME_LENGTH+22];
+	strncpy(topDir, project, PROJ_NAME_LENGTH);
 	strcat(topDir, "/scripts");
-	strcat(allIncludes, project);
+	strncpy(allIncludes, project, PROJ_NAME_LENGTH);
 	strcat(allIncludes, "/scripts/allIncludes.h");
         DIR *dir = opendir(topDir);
         if (dir == NULL){
                 return 0;
         }
-        char str[1024] = {0};
-	strcat(str, "#include \"tfuncs.h\"\n");
+	int lenOfStrVar = 0;
+       	while ((files = readdir(dir)) != NULL){
+                if(files->d_name[0] != '.' && strcmp(files->d_name, "allIncludes.h")){
+			lenOfStrVar += 12 + strlen(files->d_name);
+                }
+        }
+	rewinddir(dir);
+	char str[lenOfStrVar+20];
+	strcpy(str, "#include \"tfuncs.h\"\n");
         while ((files = readdir(dir)) != NULL){
                 if(files->d_name[0] != '.' && strcmp(files->d_name, "allIncludes.h")){
 			strcat(str, "#include \"");
@@ -128,17 +155,25 @@ int genAllIncludes(){
 
 int genCFile(){
         struct dirent *files;
-	char topDir[30] = {0};
-	strcat(topDir, project);
+	char topDir[PROJ_NAME_LENGTH+8];
+	strncpy(topDir, project, PROJ_NAME_LENGTH);
 	strcat(topDir, "/scripts");
-	char CFile[40] = {0};
-	strcat(CFile, project);
+	char CFile[PROJ_NAME_LENGTH+10];
+	strncpy(CFile, project, PROJ_NAME_LENGTH);
 	strcat(CFile, "/project.c");
         DIR *dir = opendir(topDir);
         if (dir == NULL){
                 return 0;
         }
-        char str[1024] = {0};
+	int lenOfStrVar = 347;
+	while ((files = readdir(dir)) != NULL){
+                if(files->d_name[0] != '.' && strcmp(files->d_name, "allIncludes.h") && strcmp(files->d_name, "tfuncs.h")){
+			lenOfStrVar += files->d_name*5+71;
+                }
+        }
+        char str[lenOfStrVar];
+	str[0] = 0;
+	rewinddir(dir);
 	int x = 0;
         while ((files = readdir(dir)) != NULL){
                 if(files->d_name[0] != '.' && strcmp(files->d_name, "allIncludes.h") && strcmp(files->d_name, "tfuncs.h")){
@@ -248,7 +283,8 @@ int uiStart(){
 				}
 			}
 			buffer[j] = '\0';
-			if(project[0] == 0 & (buffer[0]!='o' && buffer[0]!='q' && (buffer[0]!='n' && buffer[1]!='p') && buffer[0]!='h')){
+			j=0;
+			if(project[0] == 0 && (buffer[0]!='o' && buffer[0]!='q' && (buffer[0]!='n' && buffer[1]!='p') && buffer[0]!='h')){
 				move(LINES-1,0);
 				printw("NO PROJECT OPENED");
 			}else{
@@ -261,10 +297,11 @@ int uiStart(){
 					case ('c'):{
 						genAllIncludes();
 						genCFile();
-						char command[100] = "gcc ";
-						strcat(command, project);
+						char command[PROJ_NAME_LENGTH*2+14+34];
+						strncpy(command,"gcc ",5);
+						strncat(command, project, PROJ_NAME_LENGTH);
 						strcat(command, "/project.c -o ");
-						strcat(command, project);
+						strncat(command, project, PROJ_NAME_LENGTH);
 						strcat(command, "/bin -lncurses -ltinfo -lglut -lGL");
 						system(command);
 						move(LINES-2,0);
@@ -272,35 +309,35 @@ int uiStart(){
 						break;
 					} case ('h'):
 						move(LINES/2,0);
-						printw("Help Page - h\nfull controls available at the readme");
+						printw("Help Page - h\nfull controls available at the readme"); // LOL PAST ME WAS AN ASSHOLE
 						break;
 					case ('e'):{
 						char **tdchar = splitBySpace(buffer);
 						if(splitCount==2){
-						move(LINES-1,0);	
-						char shit[50] = {0};
-						strcpy(shit, "vim ");
-						strcat(shit, project);
-						strcat(shit, "/scripts/");
-						strcat(shit, tdchar[1]);
-						endwin();
-						system(shit);
-						initscr();
+							move(LINES-1,0);	
+							char command[PROJ_NAME_LENGTH+5+11+strlen(tdchar[1])];
+							strncpy(command, "vim ", 5);
+							strcat(command, project);
+							strcat(command, "/scripts/");
+							strcat(command, tdchar[1]);
+							endwin();
+							system(command);
+							initscr();
 						}
 						for(int i = 0; i<splitCount; i++)
 						        free(tdchar[i]);
 						break;
 					}
 					case ('r'):{
-        				move(LINES-1,0);
-				        char shit[50] = {0};
-        				strcpy(shit, "cd ");
-			        	strcat(shit, project);
-	        			strcat(shit, "; ./bin");
-        				endwin();
-				        system(shit);
-				        initscr();
-				        break;
+						move(LINES-1,0);
+						char command[PROJ_NAME_LENGTH+4+8];
+						strcpy(command, "cd ");
+						strcat(command, project);
+						strcat(command, "; ./bin");
+						endwin();
+						system(command);
+						initscr();
+						break;
 					}
 					case ('n'):{
 						switch(buffer[1]){
@@ -309,12 +346,12 @@ int uiStart(){
 								move(LINES-1,0);
 								endwin();
 								if(splitCount==4){
-								char shit[30] = {0};
-								strcpy(shit, project);
-								strcat(shit, "/objects/");
-								strcat(shit, tdchar[1]);
-								strcpy(tdchar[1], shit);
-								start(4,tdchar);
+									char command[PROJ_NAME_LENGTH+12+strlen(tdchar[1])];
+									strncpy(command, project, PROJ_NAME_LENGTH);
+									strcat(command, "/objects/");
+									strcat(command, tdchar[1]);
+									strncpy(tdchar[1], command, 100); // really stupid, why'd i do that
+									start(4,tdchar);
 								}
 								initscr();
 								for(int i = 0; i<splitCount; i++)
@@ -323,11 +360,11 @@ int uiStart(){
 							}case('p'):{
 								char **tdchar = splitBySpace(buffer);
 								if(splitCount==2){
-								mkdir(tdchar[1],0777);
-								char command[50] = {0};
-								strcat(command, "cp -r tempProject/* ");
-								strcat(command, tdchar[1]);
-								system(command);
+									mkdir(tdchar[1],0777);
+									char command[22+strlen(tdchar[1])];
+									strcpy(command, "cp -r tempProject/* ");
+									strcat(command, tdchar[1]);
+									system(command);
 								}
 								for(int i = 0; i<splitCount; i++)
 								        free(tdchar[i]);
@@ -335,20 +372,21 @@ int uiStart(){
 							}case('s'):{
 								char **tdchar = splitBySpace(buffer);
 								if(splitCount==2){
-								move(LINES-1,0);
-								char shit[30] = {0};
-								strcpy(shit, project);
-								strcat(shit, "/scripts/");
-								strcat(shit, tdchar[1]);
-								FILE *newScript = fopen(shit, "w");
-								char content[1024] = {0};
-								strcat(content, "#include \"tfuncs.h\"\n#include \"../libs/object.h\"\nint ");
-								strcat(content, tdchar[1]);
-								strcat(content, "start(Object *self){\n}\nint ");
-								strcat(content, tdchar[1]);
-								strcat(content, "loop(Object *self, char c){\n}");
-								fprintf(newScript, "%s", content);
-								fclose(newScript);}
+									move(LINES-1,0);
+									char fileName[PROJ_NAME_LENGTH+12+strlen(tdchar[1])];
+									strncpy(fileName, project, PROJ_NAME_LENGTH);
+									strcat(fileName, "/scripts/");
+									strncat(fileName, tdchar[1], 100);
+									FILE *newScript = fopen(fileName, "w");
+									char content[strlen(tdchar[1])*2+2+53+28+30] = {0};
+									strcpy(content, "#include \"tfuncs.h\"\n#include \"../libs/object.h\"\nint ");
+									strncat(content, tdchar[1],100);
+									strcat(content, "start(Object *self){\n}\nint ");
+									strncat(content, tdchar[1],100);
+									strcat(content, "loop(Object *self, char c){\n}");
+									fprintf(newScript, "%s", content);
+									fclose(newScript);
+								}
 								for(int i = 0; i<splitCount; i++)
 									free(tdchar[i]);
 								genAllIncludes();
@@ -361,18 +399,18 @@ int uiStart(){
 					} case('p'):{
 						char **tdchar = splitBySpace(buffer);
 						if(splitCount==2){
-						Screen screen = initScreen();
-						char shit[30] = {0};
-						strcpy(shit, project);
-						strcat(shit, "/objects/");
-						strcat(shit, tdchar[1]);
-						readAndAdd(shit, &screen);
-						putchar('\n');
-						render(screen);
-						freeScreen(screen);
-						char cool;
-						while((cool = getch()) != '\n');
-						refresh();
+							Screen screen = initScreen();
+							char prev[PROJ_NAME_LENGTH+13+strlen(tdchar[1])];
+							strncpy(prev, project, PROJ_NAME_LENGTH);
+							strcat(prev, "/objects/");
+							strncat(prev, tdchar[1], 100);
+							readAndAdd(prev, &screen);
+							putchar('\n');
+							render(screen);
+							freeScreen(screen);
+							char cool;
+							while((cool = getch()) != '\n');
+							refresh();
 						}
 						for(int i = 0; i<splitCount; i++)
 							free(tdchar[i]);
@@ -380,8 +418,8 @@ int uiStart(){
 					} case ('o'):{
 						char **tdchar = splitBySpace(buffer);
 						if(splitCount==2){
-						strcpy(project, tdchar[1]);
-						strcpy(projectFile, project);
+						strncpy(project, tdchar[1], PROJ_NAME_LENGTH);
+						strncpy(projectFile, project, PROJ_NAME_LENGTH);
 						strcat(projectFile, "/project.info");}
 						for(int i = 0; i<splitCount; i++)
 							free(tdchar[i]);
