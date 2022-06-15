@@ -417,10 +417,12 @@ int uiStart(){
 						break;
 					} case ('o'):{
 						char **tdchar = splitBySpace(buffer);
+						printf("%d",buffer);
 						if(splitCount==2){
-						strncpy(project, tdchar[1], PROJ_NAME_LENGTH);
-						strncpy(projectFile, project, PROJ_NAME_LENGTH);
-						strcat(projectFile, "/project.info");}
+							strncpy(project, tdchar[1], PROJ_NAME_LENGTH);
+							strncpy(projectFile, project, PROJ_NAME_LENGTH);
+							strcat(projectFile, "/project.info");
+						}
 						for(int i = 0; i<splitCount; i++)
 							free(tdchar[i]);
 						break;
