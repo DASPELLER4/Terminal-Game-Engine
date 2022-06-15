@@ -85,7 +85,7 @@ int genProjectInfo(){
 		}
 	}
 	rewinddir(dir);
-	rewinddir(dirToReadForFile)
+	rewinddir(dirToReadForFile);
 	char str[lenOfStrVar];
 	while ((files = readdir(dir)) != NULL){
 		if(files->d_name[0] != '.'){
@@ -168,7 +168,7 @@ int genCFile(){
 	int lenOfStrVar = 347;
 	while ((files = readdir(dir)) != NULL){
                 if(files->d_name[0] != '.' && strcmp(files->d_name, "allIncludes.h") && strcmp(files->d_name, "tfuncs.h")){
-			lenOfStrVar += files->d_name*5+71;
+			lenOfStrVar += strlen(files->d_name)*5+72;
                 }
         }
         char str[lenOfStrVar];
@@ -378,7 +378,7 @@ int uiStart(){
 									strcat(fileName, "/scripts/");
 									strncat(fileName, tdchar[1], 100);
 									FILE *newScript = fopen(fileName, "w");
-									char content[strlen(tdchar[1])*2+2+53+28+30] = {0};
+									char content[strlen(tdchar[1])*2+2+53+28+30];
 									strcpy(content, "#include \"tfuncs.h\"\n#include \"../libs/object.h\"\nint ");
 									strncat(content, tdchar[1],100);
 									strcat(content, "start(Object *self){\n}\nint ");
